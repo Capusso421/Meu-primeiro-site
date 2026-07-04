@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -152,15 +153,13 @@
     </div>
 
     <script>
-        const API_URL = "https://jsonplaceholder.typicode.com/posts";
-
         document.getElementById('music-file').addEventListener('change', function() {
             const fileName = this.files[0] ? this.files[0].name : "Nenhum arquivo escolhido";
             document.getElementById('file-name-label').innerText = fileName;
         });
 
         window.onload = function() {
-            carregarComentariosNuvem();
+            exibirComentarios();
         };
 
         function fazerUpload() {
@@ -169,59 +168,41 @@
                 alert('Por favor, selecione um arquivo de música primeiro!');
                 return;
             }
-            alert(`Sucesso! A música "${fileInput.files[0].name}" foi guardada com sucesso na infraestrutura Cloud vinculada ao Capusso Sound!`);
+            alert(`Sucesso! A música "${fileInput.files[0].name}" foi processada e guardada na nuvem do Capusso Sound!`);
         }
 
-        async function enviarComentario() {
+        function enviarComentario() {
             const nome = document.getElementById('user-name').value.trim();
             const comentario = document.getElementById('user-comment').value.trim();
 
             if (!nome || !comentario) {
-                alert('Preencha todos os campos!');
+                alert('Preencha todos os campos para enviar o comentário!');
                 return;
             }
 
-            const novoPost = { title: nome, body: comentario, userId: 1 };
+            const novoComentario = { nome, comentario };
+            let lista = JSON.parse(localStorage.getItem('capusso_comments')) || [];
+            lista.push(novoComentario);
+            localStorage.setItem('capusso_comments', JSON.stringify(lista));
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(novoPost),
-                    headers: { 'Content-type': 'application/json; charset=UTF-8' }
-                });
+            document.getElementById('user-name').value = '';
+            document.getElementById('user-comment').value = '';
 
-                if (response.ok) {
-                    const container = document.getElementById('comments-container');
-                    const div = document.createElement('div');
-                    div.className = 'comment-item';
-                    div.innerHTML = `<strong>${nome} (Agora mesmo)</strong><p>${comentario}</p>`;
-                    container.insertBefore(div, container.firstChild);
-
-                    document.getElementById('user-name').value = '';
-                    document.getElementById('user-comment').value = '';
-                    alert('Comentário enviado com sucesso para a base de dados global!');
-                }
-            } catch (error) {
-                alert('Erro ao conectar com o banco de dados cloud.');
-            }
+            exibirComentarios();
         }
 
-        async function carregarComentariosNuvem() {
+        function exibirComentarios() {
             const container = document.getElementById('comments-container');
-            try {
-                const response = await fetch(API_URL + "?_limit=6");
-                const dados = await response.json();
-                container.innerHTML = '';
-                
-                dados.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'comment-item';
-                    div.innerHTML = `<strong>${item.title.substring(0, 15)}</strong><p>${item.body}</p>`;
-                    container.appendChild(div);
-                });
-            } catch (error) {
-                container.innerHTML = '<p style="text-align: center; color: #ff4545;">Erro ao carregar os dados.</p>';
-            }
+            container.innerHTML = '';
+            
+            let lista = JSON.parse(localStorage.getItem('capusso_comments')) || [];
+
+            lista.reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `<strong>${item.nome}</strong><p>${item.comentario}</p>`;
+                container.appendChild(div);
+            });
         }
     </script>
 </body>
