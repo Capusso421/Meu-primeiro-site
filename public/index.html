@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capusso Sound</title>
+    <style>
+        :root {
+            --bg-principal: #121212;
+            --bg-card: #181818;
+            --texto-principal: #ffffff;
+            --texto-secundario: #b3b3b3;
+            --cor-spotify: #1db954;
+            --cor-spotify-hover: #1ed760;
+            --borda: #282828;
+            --input-bg: #2a2a2a;
+        }
+
+        [data-theme="light"] {
+            --bg-principal: #f4f4f9;
+            --bg-card: #ffffff;
+            --texto-principal: #121212;
+            --texto-secundario: #555555;
+            --cor-spotify: #1db954;
+            --cor-spotify-hover: #1aa34a;
+            --borda: #e2e2e2;
+            --input-bg: #eeeeee;
+        }
+
+        body { 
+            font-family: 'Circular', Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            transition: background 0.3s, color 0.3s;
+            background-image: linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.95)), url('https://images.unsplash.com/photo-1614149162883-504ce4d13909?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        [data-theme="light"] body {
+            background-image: linear-gradient(rgba(244, 244, 249, 0.9), rgba(244, 244, 249, 0.95)), url('https://images.unsplash.com/photo-1614149162883-504ce4d13909?q=80&w=1000&auto=format&fit=crop');
+        }
+
+        h1, h2, h3 { font-weight: bold; letter-spacing: -0.5px; }
+        h1 { font-size: 32px; text-align: center; margin-bottom: 25px; color: var(--cor-spotify); text-transform: uppercase; letter-spacing: 1px; }
+        h2 { font-size: 18px; margin-top: 0; color: var(--texto-principal); }
+
+        .box { 
+            background: var(--bg-card); 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid var(--borda);
+            transition: background 0.3s, border 0.3s;
+        }
+
+        button, input[type="submit"] { 
+            background: var(--cor-spotify); 
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        button:hover, input[type="submit"]:hover { 
+            background: var(--cor-spotify-hover);
+            transform: scale(1.03); 
+        }
+
+        .player-principal { 
+            background: #000000; 
+            color: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin-bottom: 15px;
+            border: 1px solid #282828;
+        }
+        .player-principal h3 { margin-top: 0; color: var(--cor-spotify); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        #nomeMusicaAtual { font-weight: bold; margin-bottom: 15px; color: #ffffff; font-size: 16px; }
+        audio { width: 100%; }
+
+        .item-musica { 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 14px; 
+            border-radius: 4px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .item-musica:hover { background: rgba(255, 255, 255, 0.08); }
+        [data-theme="light"] .item-musica { background: #f9f9f9; }
+        [data-theme="light"] .item-musica:hover { background: #f0f0f0; }
+
+        .nome-musica { font-weight: 500; font-size: 14px; color: var(--texto-principal); word-break: break-all; }
+        
+        .botoes-musica { display: flex; gap: 8px; }
+        .btn-tocar { background: #ffffff; color: #000000; padding: 6px 16px; font-size: 12px; }
+        [data-theme="light"] .btn-tocar { background: #121212; color: #ffffff; }
+        
+        .btn-excluir { background: #e91429; color: white; padding: 6px 16px; font-size: 12px; display: none; }
+
+        input[type="text"], input[type="password"], textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border: 1px solid transparent; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            background: var(--input-bg);
+            color: var(--texto-principal);
+            font-size: 14px;
+        }
+        input[type="text"]:focus, textarea:focus { border-color: var(--cor-spotify); outline: none; }
+
+        .comentario { border-bottom: 1px solid var(--borda); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .comentario strong { color: var(--cor-spotify); margin-right: 5px; }
+
+        .theme-switch-container { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .theme-btn { background: var(--input-bg); color: var(--texto-principal); padding: 8px 16px; font-size: 12px; border: 1px solid var(--borda); }
+
+        .admin-box { background: rgba(0, 0, 0, 0.4); border: 1px dashed var(--borda); }
+    </style>
+</head>
+<body>
+
+    <div class="theme-switch-container">
+        <button class="theme-btn" id="btnTema" onclick="alternarTema()">🌙 Modo Escuro</button>
+    </div>
+
+    <h1>🎵 Capusso Sound</h1>
+
+    <div class="box">
+        <h2>Adicionar Faixa</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="musica" accept="audio/*, audio/mpeg, audio/mp3" required><br><br>
+            <input type="submit" value="Fazer Upload">
+        </form>
+    </div>
+
+    <div class="box">
+        <h2>Sua Biblioteca</h2>
+        <div class="player-principal">
+            <h3>Tocando agora</h3>
+            <div id="nomeMusicaAtual">Nenhuma faixa selecionada</div>
+            <audio id="audioPrincipal" controls></audio>
+        </div>
+        <div id="bibliotecaMusica"></div>
+    </div>
+
+    <div class="box">
+        <h2>Feedback dos Ouvintes</h2>
+        <form id="formComentario">
+            <input type="text" id="nome" placeholder="Seu nome" required>
+            <textarea id="mensagem" placeholder="O que achou da faixa? Deixe um comentário..." rows="3" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="listaComentarios"></div>
+    </div>
+
+    <div class="box admin-box">
+        <h2>🔐 Área do Criador</h2>
+        <div id="loginAdmin">
+            <input type="password" id="senhaInput" placeholder="Senha master de exclusão">
+            <button onclick="ativarModoAdmin()">Liberar Gerenciamento</button>
+        </div>
+        <div id="statusAdmin" style="display: none; text-align: center;">
+            <p style="color: var(--cor-spotify);">✓ Modo Gerenciador Ativado</p>
+            <button onclick="sairModoAdmin()" style="background: #555;">Bloquear Painel</button>
+        </div>
+    </div>
+
+    <script>
+        const audioPrincipal = document.getElementById('audioPrincipal');
+        const nomeMusicaAtual = document.getElementById('nomeMusicaAtual');
+        let senhaMestra = "";
+
+        function alternarTema() {
+            const html = document.documentElement;
+            const btn = document.getElementById('btnTema');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.innerHTML = "🌙 Modo Escuro";
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.innerHTML = "☀️ Modo Claro";
+            }
+        }
+
+        function tocarMusica(caminhoArquivo, nomeAmigavel) {
+            audioPrincipal.src = caminhoArquivo;
+            nomeMusicaAtual.textContent = nomeAmigavel;
+            audioPrincipal.play();
+        }
+
+        async function carregarBiblioteca() {
+            const respuesta = await fetch('/api/musicas');
+            const musicas = await respuesta.json();
+            const container = document.getElementById('bibliotecaMusica');
+            container.innerHTML = '';
+
+            if (musicas.length === 0) {
+                container.innerHTML = '<p style="color: var(--texto-secundario);">Sua biblioteca está vazia.</p>';
+                return;
+            }
+
+            musicas.forEach(nomeArquivo => {
+                const nomeAmigavel = nomeArquivo.replace(/^\d+-/, '');
+                const caminhoCompleto = `/arquivos-musica/${nomeArquivo}`;
+                const exibirBotaoAdmin = senhaMestra ? 'inline-block' : 'none';
+
+                const div = document.createElement('div');
+                div.className = 'item-musica';
+                div.innerHTML = `
+                    <div class="nome-musica">🎵 ${nomeAmigavel}</div>
+                    <div class="botoes-musica">
+                        <button class="btn-tocar" onclick="tocarMusica('${caminhoCompleto}', '${nomeAmigavel}')">Tocar</button>
+                        <button class="btn-excluir" style="display: ${exibirBotaoAdmin}" onclick="excluirMusica('${nomeArquivo}')">Apagar</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function carregarComentarios() {
+            const respuesta = await fetch('/api/comentarios');
+            const comentarios = await respuesta.json();
+            const lista = document.getElementById('listaComentarios');
+            lista.innerHTML = '';
+            
+            if(comentarios.length === 0) {
+                lista.innerHTML = '<p style="color: var(--texto-secundario);">Nenhum comentário por aqui.</p>';
+                return;
+            }
+
+            comentarios.forEach(c => {
+                const exibirBotaoAdmin = senhaMestra ? 'inline-block' : 'none';
+                const div = document.createElement('div');
+                div.className = 'comentario';
+                div.innerHTML = `
+                    <div><strong>${c.nome}</strong>: <span style="color: var(--texto-secundario);">${c.mensagem}</span></div>
+                    <button class="btn-excluir" style="display: ${exibirBotaoAdmin}" onclick="excluirComentario(${c.id})">Remover</button>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        async function excluirMusica(nome) {
+            if (confirm("Deseja apagar esta música?")) {
+                await fetch(`/api/musicas/${nome}?senha=${senhaMestra}`, { method: 'DELETE' });
+                carregarBiblioteca();
+            }
+        }
+
+        async function excluirComentario(id) {
+            if (confirm("Deseja remover este comentário?")) {
+                await fetch(`/api/comentarios/${id}?senha=${senhaMestra}`, { method: 'DELETE' });
+                carregarComentarios();
+            }
+        }
+
+        function ativarModoAdmin() {
+            const senhaDigitada = document.getElementById('senhaInput').value;
+            if (senhaDigitada === '1234') {
+                senhaMestra = senhaDigitada;
+                document.getElementById('loginAdmin').style.display = 'none';
+                document.getElementById('statusAdmin').style.display = 'block';
+                carregarBiblioteca();
+                carregarComentarios();
+            } else {
+                alert("Senha inválida!");
+            }
+        }
+
+        function sairModoAdmin() {
+            senhaMestra = "";
+            document.getElementById('senhaInput').value = '';
+            document.getElementById('loginAdmin').style.display = 'block';
+            document.getElementById('statusAdmin').style.display = 'none';
+            carregarBiblioteca();
+            carregarComentarios();
+        }
+
+        document.getElementById('formComentario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const text = document.getElementById('mensagem').value;
+            await fetch('/api/comentarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, mensagem: text })
+            });
+            document.getElementById('nome').value = '';
+            document.getElementById('mensagem').value = '';
+            carregarComentarios();
+        });
+
+        carregarBiblioteca();
+        carregarComentarios();
+    </script>
+</body>
+</html>
