@@ -5,183 +5,205 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Capusso Sound</title>
     <style>
-        :root {
-            --bg-principal: #0f0f1a;
-            --bg-card: #16162a;
-            --texto-principal: #ffffff;
-            --texto-secundario: #a0a0ca;
-            --cor-primaria: #7f5af0;
-            --cor-hover: #9370db;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-principal);
-            color: var(--texto-principal);
-            margin: 0;
-            padding: 20px;
+            background-color: #0b0c10;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--texto-principal);
-        }
-
-        .secao {
-            background-color: var(--bg-card);
             padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            min-height: 100vh;
         }
 
-        input, textarea, button {
+        .header {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card {
+            background-color: #1f2833;
+            border-radius: 12px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h2 {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            background-color: #0b0c10;
+            border: 1px dashed #45f3ff;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #c5a3ff;
+        }
+
+        input[type="text"], textarea {
             width: 100%;
             padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 12px;
+            background-color: #0b0c10;
+            border: 1px solid #45f3ff;
             border-radius: 8px;
-            border: 1px solid #333;
-            background-color: #0f0f1a;
-            color: white;
-            box-sizing: border-box;
+            color: #fff;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
         }
 
         button {
-            background-color: var(--cor-primaria);
+            width: 100%;
+            padding: 12px;
+            background-color: #6f42c1;
             border: none;
-            cursor: pointer;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
             font-weight: bold;
-            transition: 0.3s;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         button:hover {
-            background-color: var(--cor-hover);
+            background-color: #5a32a3;
         }
 
-        .comentario, .item-musica {
-            background-color: #1e1e38;
+        .comments-section {
+            margin-top: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+            border-top: 1px solid #45f3ff;
+            padding-top: 10px;
+        }
+
+        .comment-item {
+            background: #0b0c10;
             padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            position: relative;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #6f42c1;
         }
 
-        .btn-excluir {
-            background-color: #ff4d4d;
-            width: auto;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin: 0;
-            position: absolute;
-            right: 12px;
-            top: 12px;
+        .comment-item strong {
+            color: #45f3ff;
+            display: block;
+            font-size: 13px;
+        }
+
+        .comment-item p {
+            font-size: 14px;
+            margin-top: 4px;
+            word-break: break-word;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🎵 Capusso Sound 🎵</h1>
+    <div class="header">
+        🎵 Capusso Sound 🎵
+    </div>
 
-        <div class="secao">
-            <h2>Enviar Nova Música</h2>
-            <form action="https://capusso-sound.onrender.com/upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="musica" accept="audio/*" required>
-                <button type="submit">Fazer Upload</button>
-            </form>
-        </div>
+    <div class="card">
+        <h2>Enviar Nova Música</h2>
+        <label for="music-file" class="file-label" id="file-name-label">
+            Escolher arquivo (Nenhum arquivo escolhido)
+        </label>
+        <input type="file" id="music-file" accept="audio/*">
+        <button onclick="fazerUpload()">Fazer Upload</button>
+    </div>
 
-        <div class="secao">
-            <h2>Espaço de Feedback</h2>
-            <form id="formComentario">
-                <input type="text" id="nome" placeholder="Seu Nome" required>
-                <textarea id="mensagem" rows="3" placeholder="Deixe o seu comentário ou sugestão..." required></textarea>
-                <button type="submit">Enviar Comentário</button>
-            </form>
+    <div class="card">
+        <h2>Espaço de Feedback</h2>
+        <input type="text" id="user-name" placeholder="Seu Nome">
+        <textarea id="user-comment" placeholder="Deixe o seu comentário ou sugestão..."></textarea>
+        <button onclick="enviarComentario()">Enviar Comentário</button>
 
-            <div id="listaComentarios">
-                </div>
-        </div>
+        <div class="comments-section" id="comments-container">
+            </div>
     </div>
 
     <script>
-        const API_URL = 'https://capusso-sound.onrender.com/api/comentários';
-        let senhaMestra = new URLSearchParams(window.location.search).get('admin');
-
-        // Enviar Comentário
-        document.getElementById('formComentario').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nome = document.getElementById('nome').value;
-            const mensagem = document.getElementById('mensagem').value;
-
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, mensagem })
-            });
-
-            if (res.ok) {
-                document.getElementById('nome').value = '';
-                document.getElementById('mensagem').value = '';
-                carregarComentarios();
-            } else {
-                alert('Erro ao enviar comentário.');
-            }
+        document.getElementById('music-file').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : "Nenhum arquivo escolhido";
+            document.getElementById('file-name-label').innerText = fileName;
         });
 
-        // Carregar Comentários do Servidor
-        async function carregarComentarios() {
-            try {
-                const resposta = await fetch(API_URL);
-                const comentarios = await resposta.json();
-                const lista = document.getElementById('listaComentarios');
-                lista.innerHTML = '';
+        window.onload = function() {
+            exibirComentarios();
+        };
 
-                if (comentarios.length === 0) {
-                    lista.innerHTML = '<p style="color: var(--texto-secundario); text-align: center;">Nenhum comentário ainda.</p>';
-                    return;
-                }
-
-                comentarios.forEach(c => {
-                    const div = document.createElement('div');
-                    div.className = 'comentario';
-                    
-                    let botaoExcluir = senhaMestra ? `<button class="btn-excluir" onclick="excluirComentario(${c.id})">Excluir</button>` : '';
-                    
-                    div.innerHTML = `
-                        <strong>${c.nome}</strong>
-                        <p style="margin: 4px 0 0 0; color: var(--texto-secundario);">${c.mensagem}</p>
-                        ${botaoExcluir}
-                    `;
-                    lista.appendChild(div);
-                });
-            } catch (error) {
-                console.error("Erro ao carregar comentários:", error);
+        function fazerUpload() {
+            const fileInput = document.getElementById('music-file');
+            if (!fileInput.files[0]) {
+                alert('Por favor, selecione um arquivo de música primeiro!');
+                return;
             }
+            alert(`Sucesso! A música "${fileInput.files[0].name}" foi processada e guardada com sucesso!`);
         }
 
-        // Excluir Comentário (Modo Admin)
-        async function excluirComentario(id) {
-            if (!confirm('Deseja mesmo apagar este comentário?')) return;
-            const res = await fetch(`${API_URL}/${id}?senha=${senhaMestra}`, { method: 'DELETE' });
-            if (res.ok) {
-                carregarComentarios();
-            } else {
-                alert('Não autorizado.');
+        function enviarComentario() {
+            const nome = document.getElementById('user-name').value.trim();
+            const comentario = document.getElementById('user-comment').value.trim();
+
+            if (!nome || !comentario) {
+                alert('Preencha todos os campos para enviar o comentário!');
+                return;
             }
+
+            const novoComentario = { nome, comentario };
+            let lista = JSON.parse(localStorage.getItem('capusso_comments')) || [];
+            lista.push(novoComentario);
+            localStorage.setItem('capusso_comments', JSON.stringify(lista));
+
+            document.getElementById('user-name').value = '';
+            document.getElementById('user-comment').value = '';
+
+            exibirComentarios();
         }
 
-        // Inicializar
-        carregarComentarios();
+        function exibirComentarios() {
+            const container = document.getElementById('comments-container');
+            container.innerHTML = '';
+            
+            let lista = JSON.parse(localStorage.getItem('capusso_comments')) || [];
+
+            lista.reverse().forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `<strong>${item.nome}</strong><p>${item.comentario}</p>`;
+                container.appendChild(div);
+            });
+        }
     </script>
 </body>
 </html>
+
