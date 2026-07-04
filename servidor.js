@@ -152,7 +152,6 @@
     </div>
 
     <script>
-        // Usando uma API REST de teste que simula o salvamento e partilha global de dados na Nuvem
         const API_URL = "https://jsonplaceholder.typicode.com/posts";
 
         document.getElementById('music-file').addEventListener('change', function() {
