@@ -83,6 +83,9 @@ app.delete('/api/comentarios/:id', (req, res) => {
     res.json({ status: 'sucesso' });
 });
 
+app.listen(PORT, (const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    console.log(`Servidor a rodar na porta ${PORT}`);
+});) => {
     console.log(`Servidor rodando em: http://localhost:${PORT}`);
 });
